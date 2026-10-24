@@ -1,0 +1,4 @@
+# 저장소에는 줄바꿈을 LF로 통일해요 (Windows/Mac/Linux 어디서 받아도 같게).
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

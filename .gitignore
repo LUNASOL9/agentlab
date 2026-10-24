@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# 비밀값(API 키 등)은 절대 커밋하지 않아요. 예시 파일(.env.example)만 올려요.
+.env
+.env.*
+!.env.example
+
+# 로컬 개발용 DB 파일
+*.db
+*.sqlite3
+
+# Node (frontend/.gitignore에도 있어요)
+node_modules/
+dist/
+
+# 에디터 / OS
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
