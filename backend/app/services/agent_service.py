@@ -11,6 +11,7 @@ from app.schemas.agent import AgentCreate, AgentUpdate
 def create_agent(session: Session, data: AgentCreate) -> Agent:
     agent = Agent(**data.model_dump())
     session.add(agent)
+
     try:
         session.commit()
     except IntegrityError as e:
