@@ -4,10 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.errors import NotFoundError
 from app.models import Agent
-from app.schemas.agent import AgentCreate
+from app.schemas.agent import AgentCreate, AgentUpdate
 
-# [과제 3-1] 아래 한 줄의 주석을 풀어요.
-# from app.schemas.agent import AgentUpdate
 # [과제 5-3] 아래 두 줄의 주석을 풀어요.
 # from sqlalchemy.exc import IntegrityError
 # from app.errors import ConflictError
@@ -40,15 +38,14 @@ def list_agents(session: Session, offset: int, limit: int) -> list[Agent]:
     return list(session.scalars(stmt))
 
 
-# [과제 3-1] 주석을 풀고 ____를 채워요.
-# def update_agent(session: Session, agent_id: int, data: AgentUpdate) -> Agent:
-#     agent = ____(session, agent_id)  # 없는 id면 여기서 NotFoundError가 나요.
-#     changes = data.model_dump(exclude_unset=True)  # 요청에 들어온 필드만 꺼내요.
-#     for field, value in changes.items():
-#         setattr(agent, field, value)  # agent.<field> = value 와 같아요.
-#     session.____()
-#     session.refresh(agent)
-#     return agent
+def update_agent(session: Session, agent_id: int, data: AgentUpdate) -> Agent:
+    agent = get_agent(session, agent_id)  # 없는 id면 여기서 NotFoundError가 나요.
+    changes = data.model_dump(exclude_unset=True)  # 요청에 들어온 필드만 꺼내요.
+    for field, value in changes.items():
+        setattr(agent, field, value)  # agent.<field> = value 와 같아요.
+    session.commit()  # PA의 변경 감지(dirty checking)처럼, 엔티티 값만 바꾸고 `commit()`하면 UPDATE가 실행
+    session.refresh(agent)
+    return agent
 
 
 # [과제 4-1] 주석을 풀고 ____를 채워요.

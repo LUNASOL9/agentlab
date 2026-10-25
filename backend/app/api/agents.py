@@ -3,11 +3,8 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 
 from app.api.deps import SessionDep
-from app.schemas.agent import AgentCreate, AgentRead
+from app.schemas.agent import AgentCreate, AgentRead, AgentUpdate
 from app.services import agent_service
-
-# [과제 3-2] 아래 한 줄의 주석을 풀어요.
-# from app.schemas.agent import AgentUpdate
 
 # @RestController + @RequestMapping("/api/agents") 역할이에요.
 router = APIRouter(prefix="/api/agents", tags=["agents"])
@@ -37,11 +34,10 @@ def list_agents(
     return [AgentRead.model_validate(agent) for agent in agents]
 
 
-# [과제 3-2] 주석을 풀고 ____를 채워요.
-# @router.____("/{agent_id}")
-# def update_agent(agent_id: int, data: ____, session: SessionDep) -> AgentRead:
-#     agent = agent_service.update_agent(session, agent_id, data)
-#     return AgentRead.model_validate(agent)
+@router.get("/{agent_id}")
+def update_agent(agent_id: int, data: AgentUpdate, session: SessionDep) -> AgentRead:
+    agent = agent_service.update_agent(session, agent_id, data)
+    return AgentRead.model_validate(agent)
 
 
 # [과제 4-2] 주석을 풀고 ____를 채워요.
