@@ -1,12 +1,8 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
 
-# Spring의 MockMvc처럼 서버를 띄우지 않고 API를 호출해 볼 수 있어요.
-client = TestClient(app)
-
-
-def test_read_root() -> None:
+# client는 conftest.py의 fixture가 넣어줘요. MockMvc처럼 서버 없이 API를 호출해요.
+def test_read_root(client: TestClient) -> None:
     response = client.get("/")
 
     assert response.status_code == 200
