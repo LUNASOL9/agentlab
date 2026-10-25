@@ -48,8 +48,7 @@ def update_agent(session: Session, agent_id: int, data: AgentUpdate) -> Agent:
     return agent
 
 
-# [과제 4-1] 주석을 풀고 ____를 채워요.
-# def delete_agent(session: Session, agent_id: int) -> None:
-#     agent = get_agent(session, agent_id)
-#     session.____(agent)
-#     session.commit()
+def delete_agent(session: Session, agent_id: int) -> None:
+    agent = get_agent(session, agent_id)
+    session.delete(agent)
+    session.commit()

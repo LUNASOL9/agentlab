@@ -27,8 +27,8 @@ def get_agent(agent_id: int, session: SessionDep) -> AgentRead:
 @router.get("")
 def list_agents(
     session: SessionDep,
-    offset: Annotated[int, Query(ge=1)] = 0,
-    limit: Annotated[int, Query(le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> list[AgentRead]:
     agents = agent_service.list_agents(session, offset, limit)
     return [AgentRead.model_validate(agent) for agent in agents]
@@ -40,7 +40,8 @@ def update_agent(agent_id: int, data: AgentUpdate, session: SessionDep) -> Agent
     return AgentRead.model_validate(agent)
 
 
-# [과제 4-2] 주석을 풀고 ____를 채워요.
-# @router.delete("/{agent_id}", status_code=status.____)
-# def delete_agent(agent_id: int, session: SessionDep) -> None:
-#     agent_service.____(session, agent_id)
+@router.delete("/{agent_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_agent(
+    agent_id: int, session: SessionDep
+) -> None:  # 돌려줄 본문이 없으니 반환 타입이 `-> None`이에요. Java의 `void`예요.
+    agent_service.delete_agent(session, agent_id)
