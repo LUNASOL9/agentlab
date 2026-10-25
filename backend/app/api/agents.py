@@ -34,7 +34,7 @@ def list_agents(
     return [AgentRead.model_validate(agent) for agent in agents]
 
 
-@router.get("/{agent_id}")
+@router.patch("/{agent_id}")
 def update_agent(agent_id: int, data: AgentUpdate, session: SessionDep) -> AgentRead:
     agent = agent_service.update_agent(session, agent_id, data)
     return AgentRead.model_validate(agent)
