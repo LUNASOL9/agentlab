@@ -1,27 +1,21 @@
-# [과제 2-1] 아래 한 줄의 주석을 풀어요.
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.errors import NotFoundError
+from app.errors import ConflictError, NotFoundError
 from app.models import Agent
 from app.schemas.agent import AgentCreate, AgentUpdate
-
-# [과제 5-3] 아래 두 줄의 주석을 풀어요.
-# from sqlalchemy.exc import IntegrityError
-# from app.errors import ConflictError
 
 
 # @Service 계층이에요. HTTP는 모르고, 비즈니스 로직과 DB 작업만 해요.
 def create_agent(session: Session, data: AgentCreate) -> Agent:
     agent = Agent(**data.model_dump())
     session.add(agent)
-    session.commit()
-    # [과제 5-3] 바로 위의 session.commit() 줄을 지우고, 아래 주석을 풀어서 ____를 채워요.
-    # try:
-    #     session.commit()
-    # except ____ as e:
-    #     session.____()  # 실패한 작업을 되돌려요. 안 하면 세션이 오류 상태로 남아요.
-    #     raise ____(f"Agent name already exists: {data.name}") from e
+    try:
+        session.commit()
+    except IntegrityError as e:
+        session.rollback()  # 실패한 작업을 되돌려요. 안 하면 세션이 오류 상태로 남아요.
+        raise ConflictError(f"Agent name already exists: {data.name}") from e
     session.refresh(agent)  # DB가 채운 id, created_at 등을 다시 읽어와요.
     return agent
 

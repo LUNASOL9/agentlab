@@ -66,7 +66,7 @@ uv run pytest
 ## 로드맵
 
 - [x] 0. 개발 환경 + GitHub 레포
-- [ ] 1. FastAPI 헬스체크 + 에이전트 CRUD (SQLite)
+- [x] 1. FastAPI 헬스체크 + 에이전트 CRUD (SQLite)
 - [ ] 2. PostgreSQL + 마이그레이션(Alembic) + 테스트
 - [ ] 3. React 화면: 에이전트 목록 / 생성
 - [ ] 4. Mock LLM + 도구 + 에이전트 실행 루프

@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi.testclient import TestClient
 
 AGENT = {
@@ -124,11 +126,10 @@ def test_delete_agent_not_found(client: TestClient) -> None:
     assert response.status_code == 404
 
 
-# [과제 5-1] 주석을 풀고 ____를 채워요.
-# def test_create_agent_duplicate_name(client: TestClient) -> None:
-#     first = client.post("/api/agents", json=AGENT)
-#     assert first.status_code == 201
-#
-#     second = client.post("/api/agents", json=____)  # 똑같은 내용을 한 번 더 보내요.
-#
-#     assert second.status_code == ____
+def test_create_agent_duplicate_name(client: TestClient) -> None:
+    first = client.post("/api/agents", json=AGENT)
+    assert first.status_code == 201
+
+    second = client.post("/api/agents", json=AGENT)  # 똑같은 내용을 한 번 더 보내요.
+
+    assert second.status_code == 409
