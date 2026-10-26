@@ -364,9 +364,9 @@ def delete_agent(agent_id: int, session: SessionDep) -> None:
 
 ## 다 끝났으면
 
-- [ ] `uv run pytest` → 19 passed
-- [ ] `uv run ruff check .` → All checks passed!
-- [ ] 코드에 `[리뷰`와 `____`가 남아 있지 않아요 (`Ctrl+Shift+F`로 폴더 전체 검색)
-- [ ] 리뷰마다 커밋했어요
+- [x] `uv run pytest` → 19 passed
+- [x] `uv run ruff check .` → All checks passed!
+- [x] 코드에 `[리뷰`와 `____`가 남아 있지 않아요 (`Ctrl+Shift+F`로 폴더 전체 검색)
+- [x] 리뷰마다 커밋했어요
 
 그다음 [1단계 가이드](01-agent-crud-api.md)의 **6번 "PR 만들고 merge하기"**로 가서 push → PR → merge를 해요.
