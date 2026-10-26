@@ -40,8 +40,7 @@ def update_agent(agent_id: int, data: AgentUpdate, session: SessionDep) -> Agent
     return AgentRead.model_validate(agent)
 
 
+# 돌려줄 본문이 없으니 반환 타입이 `-> None`이에요. Java의 `void`예요.
 @router.delete("/{agent_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_agent(
-    agent_id: int, session: SessionDep
-) -> None:  # 돌려줄 본문이 없으니 반환 타입이 `-> None`이에요. Java의 `void`예요.
+def delete_agent(agent_id: int, session: SessionDep) -> None:
     agent_service.delete_agent(session, agent_id)
