@@ -5,6 +5,8 @@ description = "AgentLab API - LLM agent testbed backend"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.161.1",
+    "pydantic-settings>=2.16.1",
+    "sqlalchemy>=2.1.6",
 ]
 
 [dependency-groups]

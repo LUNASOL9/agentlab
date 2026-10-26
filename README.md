@@ -2,7 +2,7 @@
 
 > LLM 에이전트를 실행하고, 기록하고, 비교·평가하는 테스트베드
 
-현재 상태: **0단계 - 개발 환경 구성**
+현재 상태: **1단계 완료** (에이전트 CRUD API)
 
 ## 주요 기능 (계획)
 
@@ -30,6 +30,16 @@
                                          │    └─ Tools: 계산기, SQL 조회, 웹검색 등
                                          └─ SQLAlchemy ──▶ [PostgreSQL]
 ```
+## API
+
+| 메서드 | 경로 | 설명 |
+|---|---|---|
+| `GET` | `/api/health` | 서버와 DB 상태 확인 |
+| `POST` | `/api/agents` | 에이전트 생성 (이름이 겹치면 409) |
+| `GET` | `/api/agents?offset=0&limit=20` | 목록 조회 (id 순, `limit` 최대 100) |
+| `GET` | `/api/agents/{id}` | 단건 조회 (없으면 404) |
+| `PATCH` | `/api/agents/{id}` | 보낸 필드만 수정 |
+| `DELETE` | `/api/agents/{id}` | 삭제 (성공하면 204) |
 
 ## 로컬에서 실행하기
 
@@ -66,7 +76,7 @@ uv run pytest
 ## 로드맵
 
 - [x] 0. 개발 환경 + GitHub 레포
-- [ ] 1. FastAPI 헬스체크 + 에이전트 CRUD (SQLite)
+- [x] 1. FastAPI 헬스체크 + 에이전트 CRUD (SQLite)
 - [ ] 2. PostgreSQL + 마이그레이션(Alembic) + 테스트
 - [ ] 3. React 화면: 에이전트 목록 / 생성
 - [ ] 4. Mock LLM + 도구 + 에이전트 실행 루프
