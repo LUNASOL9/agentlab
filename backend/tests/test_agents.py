@@ -133,3 +133,30 @@ def test_create_agent_duplicate_name(client: TestClient) -> None:
     second = client.post("/api/agents", json=AGENT)  # 똑같은 내용을 한 번 더 보내요.
 
     assert second.status_code == 409
+
+
+def test_update_agent_duplicate_name(client: TestClient) -> None:
+    create(client, "alpha")
+    beta = create(client, "beta")
+
+    response = client.patch(f"/api/agents/{beta['id']}", json={"name": "alpha"})
+
+    assert response.status_code == 409
+
+
+# [리뷰 2-1] 주석을 풀고 ____를 채워요.
+# def test_update_agent_rejects_null_for_required_field(client: TestClient) -> None:
+#     agent = create(client, "beta")
+#
+#     response = client.patch(f"/api/agents/{agent['id']}", json={"name": ____})
+#
+#     assert response.status_code == ____
+#
+#
+# def test_update_agent_can_clear_description(client: TestClient) -> None:
+#     agent = client.post("/api/agents", json={"name": "x", "description": "hello"}).json()
+#
+#     response = client.patch(f"/api/agents/{agent['id']}", json={"description": None})
+#
+#     assert response.status_code == 200
+#     assert response.json()["description"] is None

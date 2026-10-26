@@ -649,6 +649,8 @@ from app.schemas.agent import AgentCreate, AgentUpdate
 
 ## 6. 실습 ② PR 만들고 merge하기
 
+> 리뷰에서 나온 버그는 [리뷰 반영 가이드](01-review-fixes.md)에서 먼저 고쳐요.
+
 1. README 로드맵의 1단계를 `[x]`로 바꾸고 커밋해요: `docs: 1단계 완료 표시`
 2. 브랜치를 GitHub에 올려요.
    ```powershell
