@@ -51,7 +51,9 @@ def delete_agent(session: Session, agent_id: int) -> None:
 # 이름 앞의 _는 "이 파일 안에서만 쓰는 함수"라는 약속이에요 (Java의 private).
 def _commit_or_conflict(session: Session, name: str) -> None:
     try:
-        session.commit()  # 엔티티 값만 바꾸고 `commit()`하면 INSERT UPDATE가 실행
+        # 엔티티 값만 바꾸고 `commit()`하면
+        # 여기서 INSERT나 UPDATE가 실제로 실행돼요.
+        session.commit()
     except IntegrityError as e:  # 이름이 겹칠 때 나는 예외`IntegrityError`
         session.rollback()  # 실패한 작업을 되돌려요.
         raise ConflictError(f"Agent name already exists: {name}") from e

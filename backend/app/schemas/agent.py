@@ -2,6 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+# 시스템 프롬프트 최대 길이예요. 너무 긴 입력으로 DB가 커지는 걸 막아요.
+MAX_PROMPT_LENGTH = 10_000
+
 
 # 요청·응답에 쓰는 DTO예요. Field(...)가 Bean Validation(@Size, @Min, @Max) 역할을 해요.
 class AgentBase(BaseModel):
@@ -11,7 +14,7 @@ class AgentBase(BaseModel):
     name: str = Field(min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
     model: str = Field(default="mock", max_length=100)
-    system_prompt: str = "You are a helpful assistant."
+    system_prompt: str = Field(default="You are a helpful assistant.", max_length=MAX_PROMPT_LENGTH)
     temperature: float = Field(default=0.7, ge=0.0, le=1.0)
 
 
@@ -27,17 +30,16 @@ class AgentUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
     model: str | None = Field(default=None, max_length=100)
-    system_prompt: str | None = None
+    system_prompt: str | None = Field(default=None, max_length=MAX_PROMPT_LENGTH)
     temperature: float | None = Field(default=None, ge=0.0, le=1.0)
 
     # 안 보내는 건 괜찮지만, DB에서 NOT NULL인 필드에 null을 보내면 422로 막아요.
-    @field_validator(  # 이 네 필드에 값이 들어오면 아래 함수로 한 번 더 검사해요.
-        "name", "model", "system_prompt", "temperature"
-    )
+    # 이 네 필드에 값이 들어오면 아래 함수로 한 번 더 검사해요.
+    @field_validator("name", "model", "system_prompt", "temperature")
     @classmethod
     def reject_null(cls, value: object) -> object:
         if value is None:
-            # ValueError 값이 잘못됐어요"를 뜻하는 Python 기본 예외
+            # ValueError는 "값이 잘못됐어요"를 뜻하는 Python 기본 예외예요.
             # `ValueError`를 던지면 Pydantic이 422 응답으로 바꿔줘요.
             raise ValueError("null is not allowed")
         return value

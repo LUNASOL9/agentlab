@@ -30,8 +30,9 @@
                                          │    └─ Tools: 계산기, SQL 조회, 웹검색 등
                                          └─ SQLAlchemy ──▶ [PostgreSQL]
 ```
+## API
 
- 메서드 | 경로 | 설명 |
+| 메서드 | 경로 | 설명 |
 |---|---|---|
 | `GET` | `/api/health` | 서버와 DB 상태 확인 |
 | `POST` | `/api/agents` | 에이전트 생성 (이름이 겹치면 409) |
