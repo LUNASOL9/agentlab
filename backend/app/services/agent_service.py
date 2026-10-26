@@ -47,7 +47,7 @@ def delete_agent(session: Session, agent_id: int) -> None:
     session.commit()
 
 
-# # create_agent와 update_agent가 같이 써요. 이름이 겹쳐 저장에 실패하면 409로 바꿔요.
+# create_agent와 update_agent가 같이 써요. 이름이 겹쳐 저장에 실패하면 409로 바꿔요.
 # 이름 앞의 _는 "이 파일 안에서만 쓰는 함수"라는 약속이에요 (Java의 private).
 def _commit_or_conflict(session: Session, name: str) -> None:
     try:

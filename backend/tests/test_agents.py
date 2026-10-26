@@ -11,6 +11,12 @@ AGENT = {
 }
 
 
+def create(client: TestClient, name: str) -> dict[str, Any]:
+    response = client.post("/api/agents", json={"name": name})
+    assert response.status_code == 201
+    return response.json()
+
+
 def test_create_agent(client: TestClient) -> None:
     response = client.post("/api/agents", json=AGENT)
 
@@ -59,12 +65,6 @@ def test_get_agent_not_found(client: TestClient) -> None:
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Agent not found: id=999"}
-
-
-def create(client: TestClient, name: str) -> dict[str, Any]:
-    response = client.post("/api/agents", json={"name": name})
-    assert response.status_code == 201
-    return response.json()
 
 
 def test_list_agents(client: TestClient) -> None:
@@ -142,6 +142,7 @@ def test_update_agent_duplicate_name(client: TestClient) -> None:
     response = client.patch(f"/api/agents/{beta['id']}", json={"name": "alpha"})
 
     assert response.status_code == 409
+    assert response.json() == {"detail": "Agent name already exists: alpha"}
 
 
 def test_update_agent_rejects_null_for_required_field(client: TestClient) -> None:
@@ -159,3 +160,36 @@ def test_update_agent_can_clear_description(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json()["description"] is None
+
+
+def test_create_agent_strips_whitespace_in_name(client: TestClient) -> None:
+    response = client.post("/api/agents", json={**AGENT, "name": "  math-tutor  "})
+
+    assert response.status_code == 201
+    assert response.json()["name"] == "math-tutor"
+
+
+def test_create_agent_rejects_blank_name(client: TestClient) -> None:
+    response = client.post("/api/agents", json={**AGENT, "name": "   "})
+
+    assert response.status_code == 422
+
+
+def test_create_agent_rejects_too_long_system_prompt(client: TestClient) -> None:
+    response = client.post("/api/agents", json={**AGENT, "system_prompt": "x" * 10_001})
+
+    assert response.status_code == 422
+
+
+def test_list_agents_rejects_negative_offset(client: TestClient) -> None:
+    response = client.get("/api/agents", params={"offset": -1})
+
+    assert response.status_code == 422
+
+
+def test_update_agent_rejects_invalid_temperature(client: TestClient) -> None:
+    agent = create(client, "beta")
+
+    response = client.patch(f"/api/agents/{agent['id']}", json={"temperature": 1.5})
+
+    assert response.status_code == 422

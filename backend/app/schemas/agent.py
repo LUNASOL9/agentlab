@@ -5,6 +5,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # 요청·응답에 쓰는 DTO예요. Field(...)가 Bean Validation(@Size, @Min, @Max) 역할을 해요.
 class AgentBase(BaseModel):
+    # 문자열 앞뒤 공백을 자동으로 지워요. " alpha " → "alpha", "   " → "" (그래서 422)
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     name: str = Field(min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
     model: str = Field(default="mock", max_length=100)
@@ -18,6 +21,9 @@ class AgentCreate(AgentBase):
 
 # PATCH용이에요. 보낸 필드만 바꾸니까 모든 필드가 선택 항목이에요.
 class AgentUpdate(BaseModel):
+    # 문자열 앞뒤 공백을 자동으로 지워요. " alpha " → "alpha", "   " → "" (그래서 422)
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     name: str | None = Field(default=None, min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
     model: str | None = Field(default=None, max_length=100)
@@ -31,10 +37,10 @@ class AgentUpdate(BaseModel):
     @classmethod
     def reject_null(cls, value: object) -> object:
         if value is None:
-            raise ValueError(
-                "null is not allowed"
-            )  # ValueError 값이 잘못됐어요"를 뜻하는 Python 기본 예외
-        return value  # `ValueError`를 던지면 Pydantic이 422 응답으로 바꿔줘요.
+            # ValueError 값이 잘못됐어요"를 뜻하는 Python 기본 예외
+            # `ValueError`를 던지면 Pydantic이 422 응답으로 바꿔줘요.
+            raise ValueError("null is not allowed")
+        return value
 
 
 class AgentRead(AgentBase):
