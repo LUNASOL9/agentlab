@@ -2,7 +2,7 @@
 
 > LLM 에이전트를 실행하고, 기록하고, 비교·평가하는 테스트베드
 
-현재 상태: **1단계 완료** (에이전트 CRUD API)
+현재 상태: **2단계 진행 중** (Alembic 완료, PostgreSQL 예정)
 
 ## 주요 기능 (계획)
 
@@ -17,7 +17,7 @@
 | 영역 | 기술 |
 |---|---|
 | Frontend | React 19, TypeScript, Vite |
-| Backend | Python 3.12, FastAPI, Pydantic |
+| Backend | Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic |
 | DB | SQLite → PostgreSQL (예정) |
 | Tooling | uv, pytest, Ruff, Oxlint, Git / GitHub |
 
@@ -50,6 +50,7 @@
 ```bash
 cd backend
 uv sync
+uv run alembic upgrade head
 uv run fastapi dev app/main.py
 ```
 
@@ -71,6 +72,16 @@ npm run dev
 ```bash
 cd backend
 uv run pytest
+```
+
+### DB 마이그레이션
+
+모델(`app/models`)을 바꾼 뒤에는 마이그레이션을 만들고 적용해요.
+
+```bash
+cd backend
+uv run alembic revision --autogenerate -m "변경 내용을 영어로"
+uv run alembic upgrade head
 ```
 
 ## 로드맵
