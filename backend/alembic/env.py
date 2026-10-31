@@ -1,5 +1,5 @@
 # Alembic 명령(upgrade, revision 등)을 실행할 때마다 Alembic이 이 파일을 먼저 실행해요.
-# 대부분 Alembic이 만들어 준 기본 코드예요. 우리가 할 일은 [2단계 1-2] 빈칸뿐이에요.
+# 대부분 Alembic이 만들어 준 기본 코드예요.
 
 # fileConfig: 설정 파일(alembic.ini)에 적힌 대로 로그 출력을 켜 주는 함수예요.
 from logging.config import fileConfig
