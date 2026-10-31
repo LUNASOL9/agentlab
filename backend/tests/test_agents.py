@@ -193,3 +193,28 @@ def test_update_agent_rejects_invalid_temperature(client: TestClient) -> None:
     response = client.patch(f"/api/agents/{agent['id']}", json={"temperature": 1.5})
 
     assert response.status_code == 422
+
+
+# [2단계 2-5] 주석을 풀고 ____를 채워요.
+# def test_create_agent_uses_default_max_steps(client: TestClient) -> None:
+#     response = client.post("/api/agents", json={"name": "steps"})
+#
+#     assert response.status_code == 201
+#     assert response.json()["max_steps"] == ____
+#
+#
+# def test_create_agent_rejects_out_of_range_max_steps(client: TestClient) -> None:
+#     for max_steps in [0, 21]:  # Java의 for (int maxSteps : List.of(0, 21))
+#         # {**AGENT, ...}: AGENT 내용을 그대로 복사하고 max_steps만 바꾼 새 dict예요.
+#         response = client.post("/api/agents", json={**AGENT, "max_steps": max_steps})
+#
+#         assert response.status_code == ____
+#
+#
+# def test_update_agent_changes_max_steps(client: TestClient) -> None:
+#     agent = create(client, "beta")
+#
+#     response = client.patch(f"/api/agents/{agent['id']}", json={"max_steps": 10})
+#
+#     assert response.status_code == 200
+#     assert response.json()["max_steps"] == ____

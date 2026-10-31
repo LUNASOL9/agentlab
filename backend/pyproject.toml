@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "AgentLab API - LLM agent testbed backend"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.20.1",
     "fastapi[standard]>=0.161.1",
     "pydantic-settings>=2.16.1",
     "sqlalchemy>=2.1.6",
@@ -21,6 +22,12 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+# Alembic이 자동으로 만드는 마이그레이션 파일은 검사하지 않아요.
+extend-exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+# backend/alembic 폴더 이름 때문에 alembic 라이브러리를 우리 코드로 착각하지 않게 해요.
+known-third-party = ["alembic"]
