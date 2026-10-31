@@ -16,8 +16,7 @@ class AgentBase(BaseModel):
     model: str = Field(default="mock", max_length=100)
     system_prompt: str = Field(default="You are a helpful assistant.", max_length=MAX_PROMPT_LENGTH)
     temperature: float = Field(default=0.7, ge=0.0, le=1.0)
-    # [2단계 2-4] 주석을 풀고 ____를 채워요.
-    # max_steps: int = Field(default=____, ge=____, le=____)
+    max_steps: int = Field(default=5, ge=1, le=20)
 
 
 class AgentCreate(AgentBase):
@@ -34,14 +33,11 @@ class AgentUpdate(BaseModel):
     model: str | None = Field(default=None, max_length=100)
     system_prompt: str | None = Field(default=None, max_length=MAX_PROMPT_LENGTH)
     temperature: float | None = Field(default=None, ge=0.0, le=1.0)
-    # [2단계 2-4] 주석을 풀어요.
-    # max_steps: int | None = Field(default=None, ge=1, le=20)
+    max_steps: int | None = Field(default=None, ge=1, le=20)
 
     # 안 보내는 건 괜찮지만, DB에서 NOT NULL인 필드에 null을 보내면 422로 막아요.
     # 이 필드들에 값이 들어오면 아래 함수로 한 번 더 검사해요.
-    # [2단계 2-4] 바로 아래 @field_validator 줄을 지우고, 그 밑의 주석을 풀어서 ____를 채워요.
-    @field_validator("name", "model", "system_prompt", "temperature")
-    # @field_validator("name", "model", "system_prompt", "temperature", ____)
+    @field_validator("name", "model", "system_prompt", "temperature", "max_steps")
     @classmethod
     def reject_null(cls, value: object) -> object:
         if value is None:

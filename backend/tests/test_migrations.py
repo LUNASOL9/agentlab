@@ -8,6 +8,7 @@ from alembic import command
 from alembic.config import Config
 
 # alembic.ini 파일의 위치를 찾는 한 줄이에요. 앞에서부터 차례로 읽으면 돼요.
+
 #   __file__        → 지금 이 파일(test_migrations.py)의 경로
 #   .resolve()      → 전체 경로로 바꿔요. 예: C:/agentlab/backend/tests/test_migrations.py
 #   .parents[1]     → 두 단계 위 폴더예요. [0]은 tests 폴더, [1]은 backend 폴더예요.
