@@ -217,3 +217,11 @@ def test_update_agent_changes_max_steps(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json()["max_steps"] == 10
+
+
+def test_update_agent_rejects_null_max_steps(client: TestClient) -> None:
+    agent = create(client, "beta")
+
+    response = client.patch(f"/api/agents/{agent['id']}", json={"max_steps": None})
+
+    assert response.status_code == 422
