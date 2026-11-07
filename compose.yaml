@@ -24,7 +24,7 @@ services:
       # DB 데이터가 여기 저장돼서, 컨테이너를 지워도 데이터는 남아요.
       - pgdata:/var/lib/postgresql
       # 내 PC의 docker/postgres-init 폴더를 컨테이너 안에 보여줘요 (:ro = 읽기만).
-      # 이 폴더의 .sql 파일(docker-entrypoint-initdb.sql)은 DB를 처음 만들 때 한 번만 실행돼요.
+      # 이 폴더의 .sql 파일(create-test-db.sql)은 DB를 처음 만들 때 한 번만 실행돼요.
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
     # healthcheck: Docker가 몇 초마다 "DB가 접속을 받을 준비가 됐는지" 확인해요.
     # 준비되면 `docker compose ps`의 STATUS에 (healthy)가 보여요.
