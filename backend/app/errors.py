@@ -18,6 +18,11 @@ class ConflictError(AppError):
     status_code = 409
 
 
+# 서버가 지금 일을 할 수 없을 때예요. 예: DB에 연결이 안 될 때
+class ServiceUnavailableError(AppError):
+    status_code = 503
+
+
 # Spring의 @ControllerAdvice + @ExceptionHandler 역할이에요.
 # 서비스에서 AppError를 던지면 여기서 HTTP 응답으로 바꿔줘요.
 def register_error_handlers(app: FastAPI) -> None:
