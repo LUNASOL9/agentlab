@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from fastapi.testclient import TestClient
@@ -225,3 +226,14 @@ def test_update_agent_rejects_null_max_steps(client: TestClient) -> None:
     response = client.patch(f"/api/agents/{agent['id']}", json={"max_steps": None})
 
     assert response.status_code == 422
+
+
+def test_created_at_has_timezone(client: TestClient) -> None:
+    agent = create(client, "tz")
+
+    # 응답의 "2026-11-07T00:48:58.960505Z" 같은 글자를 datetime으로 바꿔요.
+    # 끝의 Z는 UTC(세계 표준시)라는 뜻이에요. 한국 시간은 여기에 9시간을 더해요.
+    created_at = datetime.fromisoformat(agent["created_at"])
+
+    # tzinfo: 시간대 정보예요. 시간대가 없으면 None이에요.
+    assert created_at.tzinfo is not None
