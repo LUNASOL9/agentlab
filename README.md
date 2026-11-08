@@ -2,7 +2,7 @@
 
 > LLM 에이전트를 실행하고, 기록하고, 비교·평가하는 테스트베드
 
-현재 상태: **2단계 진행 중** (Alembic 완료, PostgreSQL 예정)
+현재 상태: **2단계 완료** (PostgreSQL + Alembic + 테스트)
 
 ## 주요 기능 (계획)
 
@@ -18,8 +18,8 @@
 |---|---|
 | Frontend | React 19, TypeScript, Vite |
 | Backend | Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic |
-| DB | SQLite → PostgreSQL (예정) |
-| Tooling | uv, pytest, Ruff, Oxlint, Git / GitHub |
+| DB | PostgreSQL 18 (Docker) |
+| Tooling | uv, pytest, Ruff, Oxlint, Docker, Git / GitHub |
 
 ## 아키텍처
 
@@ -43,11 +43,16 @@
 
 ## 로컬에서 실행하기
 
-필요한 도구: Python 3.12+, [uv](https://docs.astral.sh/uv/), Node.js 22+
+필요한 도구: 
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/)
+- Node.js 22+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ### 백엔드
 
 ```bash
+docker compose up -d
 cd backend
 uv sync
 uv run alembic upgrade head
@@ -70,6 +75,7 @@ npm run dev
 ### 테스트
 
 ```bash
+docker compose up -d
 cd backend
 uv run pytest
 ```
@@ -88,7 +94,7 @@ uv run alembic upgrade head
 
 - [x] 0. 개발 환경 + GitHub 레포
 - [x] 1. FastAPI 헬스체크 + 에이전트 CRUD (SQLite)
-- [ ] 2. PostgreSQL + 마이그레이션(Alembic) + 테스트
+- [x] 2. PostgreSQL + 마이그레이션(Alembic) + 테스트
 - [ ] 3. React 화면: 에이전트 목록 / 생성
 - [ ] 4. Mock LLM + 도구 + 에이전트 실행 루프
 - [ ] 5. 실제 LLM 연결 + 실시간 트레이스 UI
