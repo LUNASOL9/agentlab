@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import String, Text, func
+from sqlalchemy import DateTime, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -22,5 +22,13 @@ class Agent(Base):
     max_steps: Mapped[int] = mapped_column(server_default="5")
 
     # 값은 DB가 채워요 (@CreationTimestamp, @UpdateTimestamp 역할).
-    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
+    # DateTime(timezone=True): 시간대까지 저장해요. PostgreSQL에서는 timestamptz 타입이 돼요.
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+    )

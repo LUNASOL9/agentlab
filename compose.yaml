@@ -1,0 +1,39 @@
+
+# Docker Compose 설정 파일이에요. `docker compose up -d` 한 줄로 아래 컨테이너를 띄워요.
+# YAML은 들여쓰기(스페이스 2칸)로 구조를 나타내요. 탭은 쓰면 안 돼요.
+
+# services: 띄울 컨테이너 목록이에요. 지금은 PostgreSQL 하나예요.
+services:
+  # db: 이 컨테이너의 이름이에요. `docker compose logs db`처럼 명령에서 써요.
+  db:
+    # image: 어떤 이미지로 띄울지예요. "이름:버전" 형식이고, PostgreSQL 18 버전을 써요.
+    image: postgres:18
+    # environment: 컨테이너 안의 환경 변수예요.
+    # postgres 이미지는 처음 켜질 때 이 값으로 사용자와 DB를 만들어요.
+    environment:
+      POSTGRES_USER: agentlab # 사용자 이름
+      POSTGRES_PASSWORD: agentlab # 비밀번호 (내 PC에서만 쓰는 개발용이라 단순하게 해요)
+      POSTGRES_DB: agentlab # 처음 만들 DB 이름 (개발용)
+    # ports: "내 PC 주소:내 PC 포트:컨테이너 포트"예요. PostgreSQL은 5432번 포트를 써요.
+    # 127.0.0.1은 "내 PC 자신"이라는 주소예요. 다른 PC에서는 접속할 수 없어요.
+    ports:
+      - "127.0.0.1:5432:5432"
+    # volumes: 컨테이너 밖에 두는 저장 공간이에요.
+    volumes:
+      # pgdata 볼륨을 컨테이너의 /var/lib/postgresql에 붙여요.
+      # DB 데이터가 여기 저장돼서, 컨테이너를 지워도 데이터는 남아요.
+      - pgdata:/var/lib/postgresql
+      # 내 PC의 docker/postgres-init 폴더를 컨테이너 안에 보여줘요 (:ro = 읽기만).
+      # 이 폴더의 .sql 파일(create-test-db.sql)은 DB를 처음 만들 때 한 번만 실행돼요.
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    # healthcheck: Docker가 몇 초마다 "DB가 접속을 받을 준비가 됐는지" 확인해요.
+    # 준비되면 `docker compose ps`의 STATUS에 (healthy)가 보여요.
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "agentlab", "-d", "agentlab"]
+      interval: 5s # 5초마다 확인해요
+      timeout: 5s # 5초 안에 대답이 없으면 실패로 봐요
+      retries: 10 # 10번 연속 실패하면 unhealthy예요
+
+# 위에서 쓴 볼륨(pgdata)을 만들어요. 이름만 적으면 Docker가 알아서 관리해요.
+volumes:
+  pgdata:
