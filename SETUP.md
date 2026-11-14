@@ -13,7 +13,7 @@ LLM 에이전트 테스트베드(FastAPI + SQLAlchemy + Alembic 백엔드, React
 | Python | 3.12 이상 | 3.12.10 설치됨 | `winget install --id Python.Python.3.12 -e --source winget` |
 | uv | 최신 | 0.13.8 설치됨 | `winget install --id astral-sh.uv -e --source winget` |
 | Node.js | 22 이상 | 24.22.1 설치됨 | `winget install --id OpenJS.NodeJS.LTS -e --source winget --version 24.22.1` |
-| **Docker Desktop** | 최신 | **미설치 — 직접 설치 필요 (2절)** | 2절 참고 |
+| Docker Desktop | 최신 | 29.9.3 설치됨 (직접 설치, 2절) | 2절 참고 |
 | 백엔드 의존성 | `uv.lock` | `uv sync` 완료 (`backend\.venv`) | `uv sync` |
 | 프런트엔드 의존성 | `package-lock.json` | `npm ci` 완료 | `npm.cmd ci` |
 | VS Code 확장 | `.vscode/extensions.json` | 4개 모두 설치됨 | Python, Ruff, Oxc, Git Graph |
@@ -125,7 +125,7 @@ uv run alembic revision --autogenerate -m "<English description>"
 uv run alembic upgrade head
 ```
 
-이 PC에서 확인한 결과(2026-11-14): `uv run ruff check .` 통과, 프런트엔드 `npm run build` 성공. **`pytest`, `alembic upgrade head`, 서버 실행은 Docker(PostgreSQL)가 없어 아직 확인하지 못했습니다.** Docker Desktop 설치 후 4절과 6절을 순서대로 실행해 확인합니다.
+이 PC에서 확인한 결과(2026-11-14, Docker 29.9.3 / Compose v5.7.0 설치 후): `docker compose up -d`로 `db`가 `(healthy)`, `uv run alembic upgrade head` 성공, `uv run pytest` 32개 통과, `uv run ruff check .` 통과, 프런트엔드 `npm run build` 성공. `fastapi dev` 서버를 띄워 브라우저로 확인하는 것은 아직 해 보지 않았습니다.
 
 ## 7. Ollama (다음 단계 대비)
 
