@@ -64,9 +64,10 @@ uv run fastapi dev app/main.py
 
 ### 프론트엔드
 
+백엔드를 먼저 켜요. 화면의 /api 요청은 백엔드(8000)로 넘어가요.
+
 ```bash
 cd frontend
-npm test
 npm install
 npm run dev
 ```
@@ -75,10 +76,19 @@ npm run dev
 
 ### 테스트
 
+백엔드 (PostgreSQL이 켜져 있어야 해요):
+
 ```bash
 docker compose up -d
 cd backend
 uv run pytest
+```
+
+프론트엔드:
+
+```bash
+cd frontend
+npm test
 ```
 
 ### DB 마이그레이션
