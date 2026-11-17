@@ -1,4 +1,3 @@
-
 // vitest: 프론트엔드 테스트 도구예요. 백엔드의 pytest와 같은 역할이에요.
 // describe: 테스트 묶음, it: 테스트 하나, expect(값).toBe(기댓값): "값이 기댓값과 같아야 해요" (assert)
 import { describe, expect, it } from 'vitest'
