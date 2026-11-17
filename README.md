@@ -2,7 +2,7 @@
 
 > LLM 에이전트를 실행하고, 기록하고, 비교·평가하는 테스트베드
 
-현재 상태: **2단계 완료** (PostgreSQL + Alembic + 테스트)
+현재 상태: **3단계 진행 중** (목록 화면 완료, 만들기 폼 예정)
 
 ## 주요 기능 (계획)
 
@@ -19,7 +19,7 @@
 | Frontend | React 19, TypeScript, Vite |
 | Backend | Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic |
 | DB | PostgreSQL 18 (Docker) |
-| Tooling | uv, pytest, Ruff, Oxlint, Docker, Git / GitHub |
+| Tooling | uv, pytest, Ruff, Vitest, Oxlint, Docker, Git / GitHub |
 
 ## 아키텍처
 
@@ -64,6 +64,8 @@ uv run fastapi dev app/main.py
 
 ### 프론트엔드
 
+백엔드를 먼저 켜요. 화면의 /api 요청은 백엔드(8000)로 넘어가요.
+
 ```bash
 cd frontend
 npm install
@@ -74,10 +76,19 @@ npm run dev
 
 ### 테스트
 
+백엔드 (PostgreSQL이 켜져 있어야 해요):
+
 ```bash
 docker compose up -d
 cd backend
 uv run pytest
+```
+
+프론트엔드:
+
+```bash
+cd frontend
+npm test
 ```
 
 ### DB 마이그레이션

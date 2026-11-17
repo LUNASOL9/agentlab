@@ -1,121 +1,41 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+// useState, useEffect: React가 주는 기능(훅)이에요. 이름이 use로 시작해요.
+import { useEffect, useState } from 'react'
+
+import { fetchAgents } from './api/agents'
+import { AgentList } from './components/AgentList'
+import type { Agent } from './types/agent'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // useState: 값이 바뀌면 화면을 다시 그려 주는 변수예요. [지금 값, 값을 바꾸는 함수]를 돌려줘요.
+  // useState<Agent[]>([]): Agent 배열을 담고, 처음 값은 빈 배열이에요.
+  const [agents, setAgents] = useState<Agent[]>([])
+  // 처음에는 아직 불러오는 중이라서 true예요.
+  const [loading, setLoading] = useState(true)
+  // 에러 문구예요. 에러가 없으면 null이에요.
+  const [error, setError] = useState<string | null>(null)
+
+  // useEffect: 화면이 그려진 다음에 할 일이에요. 여기서 목록을 불러와요.
+  // 두 번째 인자 []: "처음 한 번만" 실행하라는 뜻이에요.
+  useEffect(() => {
+    fetchAgents()
+      .then((data) => setAgents(data)) // 성공하면 목록을 넣어요.
+      .catch((e: Error) => setError(e.message)) // 실패하면 에러 문구를 넣어요.
+      .finally(() => setLoading(false)) // 성공하든 실패하든 "불러오는 중"을 끝내요.
+  }, [])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>AgentLab</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main>
+      <h1>AgentLab</h1>
+      <p className="subtitle">LLM 에이전트를 실행하고, 기록하고, 비교·평가하는 테스트베드</p>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <h2>에이전트 목록</h2>
+      {/* 조건 && 화면: 조건이 true일 때만 화면을 보여줘요. */}
+      {loading && <p>불러오는 중...</p>}
+      {error && <p className="error">{error}</p>}
+      {/* agents={...}: AgentList 컴포넌트에 props로 목록을 넘겨요. (함수에 인자를 넘기는 것과 같아요) */}
+      {!loading && !error && <AgentList agents={agents} />}
+    </main>
   )
 }
 
