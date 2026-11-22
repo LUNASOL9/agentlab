@@ -11,7 +11,7 @@ type AgentListProps = {
 export function AgentList({ agents }: AgentListProps) {
   // 목록이 비어 있으면 표 대신 안내 문구를 보여줘요.
   if (agents.length === 0) {
-    return <p className="empty">아직 에이전트가 없어요. /docs에서 하나 만들어 보세요.</p>
+    return <p className="empty">아직 에이전트가 없어요. 위의 폼에서 하나 만들어 보세요.</p>
   }
 
   // 돌려주는 값이 화면이에요. HTML처럼 생겼지만 JSX라는 자바스크립트 문법이에요.

@@ -14,3 +14,14 @@ export type Agent = {
   created_at: string
   updated_at: string
 }
+
+// 에이전트를 만들 때 보내는 값이에요. backend/app/schemas/agent.py의 AgentCreate와 짝이에요.
+// Agent에서 서버가 정해 주는 값(id, created_at, updated_at)을 뺀 모양이에요.
+export type AgentCreateInput = {
+  name: string
+  description: string | null
+  model: string
+  system_prompt: string
+  temperature: number
+  max_steps: number
+}
