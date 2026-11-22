@@ -20,7 +20,6 @@ export async function fetchAgents(): Promise<Agent[]> {
 // 성공하면 서버가 만든 에이전트(id, created_at 포함)를 돌려줘요.
 export async function createAgent(input: AgentCreateInput): Promise<Agent> {
   // fetch의 두 번째 인자로 요청 방법을 정해요.
-
   const response = await fetch('/api/agents', {
     // method: HTTP 메서드예요. 안 쓰면 GET이에요.
     method: 'POST',
@@ -37,5 +36,4 @@ export async function createAgent(input: AgentCreateInput): Promise<Agent> {
   }
 
   return response.json()
-
 }
