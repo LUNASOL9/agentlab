@@ -21,4 +21,18 @@ describe('toErrorMessage', () => {
     // 백엔드가 꺼져 있으면 Vite가 502를 줘요. 본문이 JSON이 아니라서 null로 받아요.
     expect(toErrorMessage(502, null)).toBe('요청이 실패했어요 (HTTP 502)')
   })
+
+  it('422 에러가 두 개일 때 테스트', () => {
+    // 이름도 비고 temperature도 1을 넘으면, 422의 detail 목록에 문제가 2개 들어와요.
+    const body = {
+      detail: [
+        { loc: ['body', 'name'], msg: 'String should have at least 1 character' },
+        { loc: ['body', 'temperature'], msg: 'Input should be less than or equal to 1' }
+      ]
+    }
+
+    expect(toErrorMessage(422, body)).toBe(
+      'name: String should have at least 1 character, temperature: Input should be less than or equal to 1',
+    )
+  })
 })
