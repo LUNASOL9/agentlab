@@ -115,6 +115,7 @@ uv run ruff check .
 cd ..\frontend
 npm.cmd run lint
 npm.cmd run build
+npm.cmd test
 ```
 
 마이그레이션 추가:
@@ -125,7 +126,7 @@ uv run alembic revision --autogenerate -m "<English description>"
 uv run alembic upgrade head
 ```
 
-이 PC에서 확인한 결과(2026-11-14, Docker 29.9.3 / Compose v5.7.0 설치 후): `docker compose up -d`로 `db`가 `(healthy)`, `uv run alembic upgrade head` 성공, `uv run pytest` 32개 통과, `uv run ruff check .` 통과, 프런트엔드 `npm run build` 성공. `fastapi dev` 서버를 띄워 브라우저로 확인하는 것은 아직 해 보지 않았습니다.
+이 PC에서 확인한 결과(2026-11-14, Docker 29.9.3 / Compose v5.7.0 설치 후): `docker compose up -d`로 `db`가 `(healthy)`, `uv run alembic upgrade head` 성공, `uv run pytest` 32개 통과, `uv run ruff check .` 통과, 프런트엔드 `npm run build` 성공. 2026-11-22에 `fastapi dev`와 `npm run dev`를 띄워 브라우저에서 목록과 만들기 폼을 확인했습니다.
 
 ## 7. Ollama (다음 단계 대비)
 
