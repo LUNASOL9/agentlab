@@ -263,6 +263,7 @@ import { toErrorMessage } from '../utils/errors'
 | `value={name}` | 칸에 보일 값이에요 |
 | `onChange={(e) => setName(e.target.value)}` | 글자를 칠 때마다 불려요. `e.target.value`는 칸에 지금 쓰인 글자예요 |
 | `onSubmit={handleSubmit}` | 폼을 제출할 때(버튼, 엔터) 불려요 |
+| `event: SubmitEvent<HTMLFormElement>` | 폼 제출 이벤트예요. `<HTMLFormElement>`는 "폼(`<form>`)에서 일어난 이벤트"라는 뜻이에요 |
 | `event.preventDefault()` | 브라우저의 기본 동작(페이지 새로고침)을 막아요 |
 | `try { } catch (err) { } finally { }` | Java와 같아요 |
 | `(err as Error).message` | `err`를 `Error`로 보고 문구를 꺼내요 (Java의 형변환 `(Error) err`) |
@@ -273,6 +274,31 @@ import { toErrorMessage } from '../utils/errors'
 > **`??`(전반)와 `||`(이번)의 차이**
 > `??`는 왼쪽이 `null`일 때만 오른쪽을 써요. `||`는 빈 글자(`''`)일 때도 오른쪽을 써요.
 > 설명 칸을 비우면 `''`가 와요. 그래서 이번엔 `||`를 써야 `null`로 보내져요.
+
+#### `FormEvent` 대신 `SubmitEvent`를 써요
+
+템플릿에는 `FormEvent`라고 적혀 있었어요. 그런데 VS Code에서 줄이 그어지고 `'FormEvent' is deprecated`가 떠요.
+
+- **deprecated**: "아직 동작하지만 앞으로는 쓰지 마세요"라는 표시예요. Java의 `@Deprecated`와 같아요.
+- 이유: 설치된 React 타입(`@types/react` 19.3.0)에 이렇게 적혀 있어요. "React에는 FormEvent라는 이벤트가 따로 없어요. 제출이면 `SubmitEvent`, 입력칸 변경이면 `ChangeEvent`를 쓰세요."
+- 빌드·린트·테스트는 이 표시를 잡지 못해요. 그래서 VS Code에서만 보여요.
+
+두 곳을 이렇게 써요. (맨 위 import, 그리고 `handleSubmit` 줄)
+
+```tsx
+// SubmitEvent: 폼 제출 이벤트의 타입이에요. 타입만 쓰니까 import type이에요.
+import type { SubmitEvent } from 'react'
+import { useState } from 'react'
+```
+
+```tsx
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    // 브라우저 기본 동작(페이지 새로고침)을 막아요.
+    event.preventDefault()
+```
+
+import 줄을 빠뜨리면 `npm run build`가 `Type 'SubmitEvent' is not generic`으로 실패해요.
+import가 없으면 TypeScript는 브라우저에 원래 있는 `SubmitEvent` 타입을 써요. 그 타입은 `<HTMLFormElement>` 같은 꺾쇠를 받지 않거든요.
 
 <details>
 <summary>정답 보기 (빈칸 5개)</summary>
@@ -524,7 +550,8 @@ npm test
 
 2. 같은 절 맨 아래 "이 PC에서 확인한 결과" 문단의 마지막 문장을 바꿔요.
    - 지금: `` `fastapi dev` 서버를 띄워 브라우저로 확인하는 것은 아직 해 보지 않았습니다. ``
-   - 바꾼 뒤: `` 2026-11-17에 `fastapi dev`와 `npm run dev`를 띄워 브라우저에서 목록과 만들기 폼을 확인했습니다. ``
+   - 바꾼 뒤: `` YYYY-MM-DD에 `fastapi dev`와 `npm run dev`를 띄워 브라우저에서 목록과 만들기 폼을 확인했습니다. ``
+   - `YYYY-MM-DD`에는 6번에서 화면을 직접 확인한 날짜를 써요.
 
 SETUP.md는 "~습니다" 말투로 쓰여 있어서, 고칠 때도 그 말투에 맞춰요.
 
@@ -538,7 +565,7 @@ SETUP.md는 "~습니다" 말투로 쓰여 있어서, 고칠 때도 그 말투에
 |---|---|---|
 | 1 `feat: 에이전트 만들기 타입과 에러 문구 함수` | 2번 뒤 | `frontend/src/types/agent.ts`, `frontend/src/utils/errors.ts`, `frontend/src/utils/errors.test.ts`, `docs/guide/03-agent-create-form.md` |
 | 2 `feat: 에이전트 만들기 API 함수` | 3번 뒤 | `frontend/src/api/agents.ts` |
-| 3 `feat: 에이전트 만들기 폼` | 5번 뒤 | `frontend/src/components/AgentForm.tsx`, `frontend/src/components/AgentList.tsx`, `frontend/src/App.tsx`, `frontend/src/App.css` |
+| 3 `feat: 에이전트 만들기 폼` | 5번 뒤 | `frontend/src/components/AgentForm.tsx`, `frontend/src/components/AgentList.tsx`, `frontend/src/App.tsx`, `frontend/src/App.css`, `docs/guide/03-agent-create-form.md` (4번 `SubmitEvent` 수정분) |
 | (선택) `feat: 목록 개수와 만들기 성공 문구 표시` | 7번 뒤 | 7번에서 바꾼 파일 |
 | 4 `docs: README와 SETUP에 3단계 완료 반영` | 8번 뒤 | `README.md`, `SETUP.md` |
 
@@ -563,6 +590,8 @@ SETUP.md는 "~습니다" 말투로 쓰여 있어서, 고칠 때도 그 말투에
 | `npm run build`에서 `Cannot find name 'AgentCreateInput'` 또는 `'toErrorMessage'` | 3번 맨 위 import를 안 바꿨어요 | 3번 1을 해요 |
 | `npm run build`에서 `Cannot find name '____'` | 빈칸이 남아 있어요 | `Ctrl+Shift+F`로 `____`를 찾아요 |
 | `Argument of type 'string' is not assignable to ... SetStateAction<number>` | 숫자 칸에서 `Number(...)`를 빠뜨렸어요 | `setMaxSteps(Number(e.target.value))` |
+| VS Code에서 `FormEvent`에 줄이 그어지고 `'FormEvent' is deprecated` | React 타입에서 "쓰지 마세요" 표시가 붙은 이름이에요 (빌드는 돼요) | `SubmitEvent`로 바꿔요 (4번) |
+| `npm run build`에서 `Type 'SubmitEvent' is not generic` | `import type { SubmitEvent } from 'react'` 줄이 빠졌어요 | 맨 위에 import 줄을 넣어요 (4번) |
 | 만들기를 누르면 페이지가 새로고침돼요 | `event.preventDefault()`가 빠졌어요 | 4번 첫 빈칸 |
 | 입력칸에 글자가 안 써져요 | `value`는 있는데 `onChange`가 없어요 (state가 안 바뀌어요) | `onChange`를 넣어요 |
 | 만들었는데 목록이 안 바뀌어요 | `onCreated()`를 안 불렀거나, App에서 `onCreated={loadAgents}`를 안 넘겼어요 | 4번 세 번째 빈칸, 5-2 |
@@ -575,6 +604,7 @@ SETUP.md는 "~습니다" 말투로 쓰여 있어서, 고칠 때도 그 말투에
 - [ ] 같은 이름 → 409 문구, 스페이스만 넣은 이름 → 422 문구, 백엔드를 끄면 502 문구가 나와요
 - [ ] `npm run build` → 성공
 - [ ] `npm run lint` → 아무것도 안 나와요
+- [ ] VS Code에서 줄이 그어진 이름(deprecated)이 없어요
 - [ ] `npm test` → `Tests  5 passed (5)` (7-3을 했으면 6)
 - [ ] `[3단계`, `[직접 써 보기` 안내 줄과 `____`가 남아 있지 않아요 (`Ctrl+Shift+F`로 검색)
 - [ ] 커밋 4개 (더 해 보기를 했으면 5개)
