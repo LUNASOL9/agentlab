@@ -27,8 +27,8 @@ describe('toErrorMessage', () => {
     const body = {
       detail: [
         { loc: ['body', 'name'], msg: 'String should have at least 1 character' },
-        { loc: ['body', 'temperature'], msg: 'Input should be less than or equal to 1' }
-      ]
+        { loc: ['body', 'temperature'], msg: 'Input should be less than or equal to 1' },
+      ],
     }
 
     expect(toErrorMessage(422, body)).toBe(
